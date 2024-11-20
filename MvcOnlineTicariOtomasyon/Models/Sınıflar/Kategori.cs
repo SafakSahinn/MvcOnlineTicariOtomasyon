@@ -11,5 +11,8 @@ namespace MvcOnlineTicariOtomasyon.Models.Sınıflar
         [Key]
         public int KategoriID { get; set; }
         public string KategoriAd { get; set; }
+
+        //ilişkiler (birden fazla ürünü bir arada tutmak için koleksiyona ihtiyacımız var)
+        public ICollection<Urun> Uruns { get; set; }
     }
 }
