@@ -13,5 +13,8 @@ namespace MvcOnlineTicariOtomasyon.Models.Sınıflar
         public string PersonelAd { get; set; }
         public string PersonelSoyad { get; set; }
         public string PersonelGorsel { get; set; }
+
+        //ilişkiler
+        public SatisHareket SatisHareket { get; set; }
     }
 }

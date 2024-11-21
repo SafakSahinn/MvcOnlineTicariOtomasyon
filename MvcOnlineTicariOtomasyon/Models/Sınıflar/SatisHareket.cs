@@ -17,5 +17,10 @@ namespace MvcOnlineTicariOtomasyon.Models.Sınıflar
         public int Adet { get; set; }
         public decimal Fiyat { get; set; }
         public decimal ToplamTutar { get; set; }
+
+        //ilişkiler
+        public ICollection<Urun> Uruns { get; set; }
+        public ICollection<Cariler> Carilers { get; set; }
+        public ICollection<Personel> Personels { get; set; }
     }
 }
