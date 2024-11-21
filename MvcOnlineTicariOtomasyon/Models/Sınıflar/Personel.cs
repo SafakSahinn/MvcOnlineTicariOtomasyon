@@ -16,5 +16,6 @@ namespace MvcOnlineTicariOtomasyon.Models.Sınıflar
 
         //ilişkiler
         public SatisHareket SatisHareket { get; set; }
+        public Departman Departman { get; set; }
     }
 }
