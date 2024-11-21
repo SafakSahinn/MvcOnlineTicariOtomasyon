@@ -18,7 +18,7 @@ namespace MvcOnlineTicariOtomasyon.Models.Sınıflar
         public bool Durum { get; set; }
         public string UrunGorsel { get; set; }
 
-        //ilişki
+        //ilişki (bir ürünün kategori sınıfına bağlı olan bir kategorisi olabilir)
         public Kategori Kategori { get; set; }
     }
 }
