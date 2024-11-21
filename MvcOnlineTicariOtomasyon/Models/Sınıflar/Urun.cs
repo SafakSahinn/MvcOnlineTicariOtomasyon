@@ -23,6 +23,9 @@ namespace MvcOnlineTicariOtomasyon.Models.Sınıflar
         public decimal AlisFiyat { get; set; }
         public decimal SatisFiyat { get; set; }
         public bool Durum { get; set; }
+
+        [Column(TypeName = "Varchar")]
+        [StringLength(250)]
         public string UrunGorsel { get; set; }
 
         //ilişkiler (bir ürünün kategori sınıfına bağlı olan bir kategorisi olabilir)
