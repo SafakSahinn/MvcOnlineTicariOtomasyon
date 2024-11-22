@@ -30,6 +30,7 @@ namespace MvcOnlineTicariOtomasyon.Models.Sınıflar
 
         //ilişkiler (bir ürünün kategori sınıfına bağlı olan bir kategorisi olabilir)
         public Kategori Kategori { get; set; }
-        public SatisHareket SatisHareket { get; set; }
+
+        public ICollection<SatisHareket> SatisHarekets { get; set; }
     }
 }
