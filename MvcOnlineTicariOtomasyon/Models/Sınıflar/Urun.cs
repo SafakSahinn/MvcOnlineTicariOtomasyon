@@ -29,7 +29,7 @@ namespace MvcOnlineTicariOtomasyon.Models.Sınıflar
         public string UrunGorsel { get; set; }
 
         //ilişkiler (bir ürünün kategori sınıfına bağlı olan bir kategorisi olabilir)
-        public Kategori Kategori { get; set; }
+        public virtual Kategori Kategori { get; set; }
 
         public ICollection<SatisHareket> SatisHarekets { get; set; }
     }
