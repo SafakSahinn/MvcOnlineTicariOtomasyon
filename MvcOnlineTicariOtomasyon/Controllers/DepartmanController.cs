@@ -14,7 +14,7 @@ namespace MvcOnlineTicariOtomasyon.Controllers
 
         public ActionResult Index()
         {
-            var degeler = c.Departmans.ToList();
+            var degeler = c.Departmans.Where(x => x.Durum == true).ToList();
             return View(degeler);
         }
 
@@ -30,6 +30,33 @@ namespace MvcOnlineTicariOtomasyon.Controllers
             c.Departmans.Add(d);
             c.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public ActionResult DepartmanSil(int id)
+        {
+            var dep = c.Departmans.Find(id);
+            dep.Durum = false;
+            c.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult DepartmanGetir(int id)
+        {
+            var dpt = c.Departmans.Find(id);
+            return View("DepartmanGetir", dpt);
+        }
+
+        public ActionResult DepartmanGuncelle(Departman p)
+        {
+            var dept = c.Departmans.Find(p.DepartmanId);
+            dept.DepartmanAd = p.DepartmanAd;
+            c.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult DepartmanDetay(int id)
+        {
+            return View();
         }
     }
 }
