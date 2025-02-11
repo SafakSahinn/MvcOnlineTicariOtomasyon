@@ -13,8 +13,30 @@ namespace MvcOnlineTicariOtomasyon.Controllers
         Context c = new Context();
         public ActionResult Index()
         {
-            var degerler = c.Carilers.ToList();
+            var degerler = c.Carilers.Where(x => x.Durum == true).ToList();
             return View(degerler);
+        }
+
+        [HttpGet]
+        public ActionResult YeniCari()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult YeniCari(Cariler p)
+        {
+            p.Durum = true;
+            c.Carilers.Add(p);
+            c.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult CariSil(int id)
+        {
+            var cari = c.Carilers.Find(id);
+            cari.Durum = false;
+            c.SaveChanges();
+            return RedirectToAction("Index");
         }
     }
 }
