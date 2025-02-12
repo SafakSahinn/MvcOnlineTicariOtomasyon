@@ -58,8 +58,33 @@ namespace MvcOnlineTicariOtomasyon.Controllers
 
         public ActionResult SatisGetir(int id)
         {
+            List<SelectListItem> deger1 = (from x in c.Uruns.ToList()
+                                           select new SelectListItem
+                                           {
+                                               Text = x.UrunAd,
+                                               Value = x.UrunID.ToString()
+                                           }).ToList();
+
+            List<SelectListItem> deger2 = (from x in c.Carilers.ToList()
+                                           select new SelectListItem
+                                           {
+                                               Text = x.CariAd + " " + x.CariSoyad,
+                                               Value = x.CariId.ToString()
+                                           }).ToList();
+
+            List<SelectListItem> deger3 = (from x in c.Personels.ToList()
+                                           select new SelectListItem
+                                           {
+                                               Text = x.PersonelAd + " " + x.PersonelSoyad,
+                                               Value = x.PersonelId.ToString()
+                                           }).ToList();
+
+            ViewBag.dgr1 = deger1;
+            ViewBag.dgr2 = deger2;
+            ViewBag.dgr3 = deger3;
+
             var deger = c.SatisHarekets.Find(id);
-            return View("SatisGetir", id);
+            return View("SatisGetir", deger);
         }
 
     }
