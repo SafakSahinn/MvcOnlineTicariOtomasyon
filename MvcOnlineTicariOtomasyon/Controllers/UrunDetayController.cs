@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using MvcOnlineTicariOtomasyon.Models.Sınıflar;
 
 namespace MvcOnlineTicariOtomasyon.Controllers
 {
     public class UrunDetayController : Controller
     {
         // GET: UrunDetay
+        Context c = new Context();
+
         public ActionResult Index()
         {
-            return View();
+            var degerler = c.Uruns.ToList();
+            return View(degerler);
         }
     }
 }
