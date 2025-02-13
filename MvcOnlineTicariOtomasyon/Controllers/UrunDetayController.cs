@@ -17,5 +17,11 @@ namespace MvcOnlineTicariOtomasyon.Controllers
             var degerler = c.Uruns.ToList();
             return View(degerler);
         }
+
+        public ActionResult UrunDetay(int id)
+        {
+            var degerler = c.Uruns.Where(x => x.UrunID == id).ToList();
+            return View("UrunDetay", degerler);
+        }
     }
 }
