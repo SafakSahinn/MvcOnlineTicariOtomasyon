@@ -1,4 +1,4 @@
-﻿
+﻿@model IEnumerable<MvcOnlineTicariOtomasyon.Models.Sınıflar.SinifGrup>
 @{
     ViewBag.Title = "KolayTablolar";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
@@ -45,6 +45,30 @@
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
+
+                    <style>
+                        /* Custom Progress Bar Colors */
+                        .progress-bar-danger {
+                            background-color: red !important; /* Kırmızı */
+                        }
+
+                        .progress-bar-warning {
+                            background-color: orange !important; /* Turuncu */
+                        }
+
+                        .progress-bar-info {
+                            background-color: lightblue !important; /* Mavi */
+                        }
+
+                        .progress-bar-primary {
+                            background-color: blue !important; /* Mavi */
+                        }
+
+                        .progress-bar-success {
+                            background-color: green !important; /* Yeşil */
+                        }
+                    </style>
+
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
@@ -177,8 +201,6 @@
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Müşteri Şehir Tablosu</h3>
-
-                                
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body p-0">
@@ -188,19 +210,59 @@
                                             <th style="width: 10px">#</th>
                                             <th>Şehir</th>
                                             <th>Durum</th>
-                                            <th style="width: 40px">Adet</th>
+                                            <th style="width: 110px">Cari Sayısı</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @{ int sirano = 0;
+                                            int toplamCariSayisi = Model.Sum(x => x.Sayi);
+                                        }
+
+
+
+                                        @foreach (var x in Model)
+                                        {
+                                            double oran = toplamCariSayisi > 0 ? ((double)x.Sayi / toplamCariSayisi) * 100 : 1; // Yüzdelik oran hesapla
+                                            string oranStr = oran.ToString("0.##"); // Ondalık sayıyı iki basamakla göster
+
+                                            // Renk sınıfını belirleme (oranın durumuna göre)
+                                            string progressBarClass = oran <= 20 ? "progress-bar-danger" :
+                                                                       oran <= 40 ? "progress-bar-warning" :
+                                                                       oran <= 60 ? "progress-bar-info" :
+                                                                       oran <= 80 ? "progress-bar-primary" :
+                                                                       "progress-bar-success";
+
+                                            string badgeClass = oran <= 20 ? "badge bg-danger" :
+                                                                oran <= 40 ? "badge bg-warning" :
+                                                                oran <= 60 ? "badge bg-info" :
+                                                                oran <= 80 ? "badge bg-primary" :
+                                                                "badge bg-success";
+
+                                            <tr>
+                                                <td>@{sirano++;} @sirano</td>
+                                                <td>@x.Sehir</td>
+                                                <td style="display: flex; align-items: center;">
+                                                    <span style="min-width: 40px; margin-right: 10px; font-weight: bold; text-align: left;">@oranStr%</span>
+                                                    <div class="progress progress-xs" style="flex: 1;">
+                                                        <!-- Progress bar rengi de oranlara göre değişiyor -->
+                                                        <div class="progress-bar @progressBarClass" style="width: @(oran)%"></div>
+                                                    </div>
+                                                </td>
+                                                <td><span class="@badgeClass">@x.Sayi</span></td>
+                                            </tr>
+                                        }
+
+                                        <!-- Toplam satırı -->
                                         <tr>
-                                            <td>1.</td>
-                                            <td>Update software</td>
-                                            <td>
-                                                <div class="progress progress-xs">
-                                                    <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
+                                            <td colspan="2"><strong>Toplam</strong></td>
+                                            <td style="display: flex; align-items: center;">
+                                                <span style="min-width: 40px; margin-right: 10px; font-weight: bold; text-align: left;">100%</span>
+                                                <div class="progress progress-xs" style="flex: 1;">
+                                                    <!-- Toplam progress barı sabit yeşil yapalım -->
+                                                    <div class="progress-bar progress-bar-success" style="width: 100%"></div>
                                                 </div>
                                             </td>
-                                            <td><span class="badge bg-danger">55%</span></td>
+                                            <td><span class="badge bg-success">@toplamCariSayisi</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -453,7 +515,6 @@
         <!-- Control sidebar content goes here -->
     </aside>
     <!-- /.control-sidebar -->
-
     <!-- ./wrapper -->
     <!-- jQuery -->
     <script src="../../plugins/jquery/jquery.min.js"></script>
