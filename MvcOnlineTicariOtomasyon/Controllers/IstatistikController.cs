@@ -71,5 +71,10 @@ namespace MvcOnlineTicariOtomasyon.Controllers
 
             return View();
         }
+
+        public ActionResult KolayTablolar()
+        {
+            return View();
+        }
     }
 }
