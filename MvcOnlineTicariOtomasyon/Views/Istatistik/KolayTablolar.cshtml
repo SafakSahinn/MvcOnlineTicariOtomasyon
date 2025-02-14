@@ -218,8 +218,6 @@
                                             int toplamCariSayisi = Model.Sum(x => x.Sayi);
                                         }
 
-
-
                                         @foreach (var x in Model)
                                         {
                                             double oran = toplamCariSayisi > 0 ? ((double)x.Sayi / toplamCariSayisi) * 100 : 1; // Yüzdelik oran hesapla
