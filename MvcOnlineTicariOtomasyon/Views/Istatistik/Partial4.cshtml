@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<MvcOnlineTicariOtomasyon.Models.Sınıflar.SinifGrup3>
-
+@using System.Globalization
 @{
     // Sayfa numarasını query string'den al
     int currentPage3 = Request.QueryString["page3"] != null ? int.Parse(Request.QueryString["page3"]) : 1;
@@ -20,7 +20,7 @@
 
 <div class="card">
     <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-        <h3 class="card-title">Marka İstatıstıklerı</h3>
+        <h3 class="card-title"><strong>Marka İstatistikleri</strong></h3>
         <div style="display: flex; gap: 10px; margin-left: auto;">
             <button id="prevPage3" class="btn btn-primary" @(currentPage3 == 1 ? "disabled" : "")>« Geri</button>
             <span style="font-weight: bold;" id="pageInfo3">Sayfa @currentPage3 / @totalPages3</span>
@@ -32,7 +32,7 @@
             <thead>
                 <tr>
                     <th style="width: 55px">#</th>
-                    <th>Marka</th>
+                    <th style="width: 200px">Marka</th>
                     <th>Durum</th>
                     <th style="width: 110px">Sayı</th>
                 </tr>
@@ -45,14 +45,14 @@
                 @foreach (var x in currentPageData)
                 {
                     double oran = toplamMarkaSayisi > 0 ? ((double)x.Sayi / toplamMarkaSayisi) * 100 : 1; // Yüzdelik oran hesapla
-                    string oranStr = oran.ToString("0.#"); // Ondalık sayıyı bir basamakla göster
+                    string oranStr = oran.ToString("0.#", CultureInfo.InvariantCulture).Replace(",", "."); // Ondalık sayıyı bir basamakla göster
 
                     // Renk sınıfını belirleme (oranın durumuna göre)
                     string progressBarClass = oran <= 20 ? "progress-bar-danger" :
-                                               oran <= 40 ? "progress-bar-warning" :
-                                               oran <= 60 ? "progress-bar-info" :
-                                               oran <= 80 ? "progress-bar-primary" :
-                                               "progress-bar-success";
+                                                   oran <= 40 ? "progress-bar-warning" :
+                                                   oran <= 60 ? "progress-bar-info" :
+                                                   oran <= 80 ? "progress-bar-primary" :
+                                                   "progress-bar-success";
 
                     string badgeClass = oran <= 20 ? "badge bg-danger" :
                                         oran <= 40 ? "badge bg-warning" :
@@ -66,7 +66,7 @@
                         <td style="display: flex; align-items: center;">
                             <span style="min-width: 40px; margin-right: 10px; font-weight: bold; text-align: left;">@oranStr%</span>
                             <div class="progress progress-xs" style="flex: 1;">
-                                <div class="progress-bar @progressBarClass" style="width: @(oran)%"></div>
+                                <div class="progress-bar @progressBarClass" style="width: @(oranStr)%"></div>
                             </div>
                         </td>
                         <td><span class="@badgeClass">@x.Sayi</span></td>
@@ -83,8 +83,8 @@
                         <tr class="empty-row">
                             <td>@startIndex</td> <!-- Burada boş satır için de sıralama numarasını ekliyoruz -->
                             <td>-</td> <!-- Boş satırda Şehir kısmı - olacak -->
-                            <td>0%</td> <!-- Boş satırda Durum kısmı 0% olacak -->
-                            <td>0</td> <!-- Boş satırda Cari Sayısı kısmı 0 olacak -->
+                            <td><strong>0%</strong></td> <!-- Boş satırda Durum kısmı 0% olacak -->
+                            <td><span class="badge bg-black">0</span></td> <!-- Boş satırda Cari Sayısı kısmı 0 olacak -->
                         </tr>
                         startIndex++; // Boş satırların sırasını artırıyoruz
                     }

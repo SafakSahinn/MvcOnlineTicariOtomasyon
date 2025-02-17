@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<MvcOnlineTicariOtomasyon.Models.Sınıflar.SinifGrup2>
-
+@using System.Globalization
 @{
     // Sayfa numarasını query string'den al
     int currentPage = Request.QueryString["page"] != null ? int.Parse(Request.QueryString["page"]) : 1;
@@ -20,7 +20,7 @@
 
 <div class="card">
     <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-        <h3 class="card-title">Departman Personel Tablosu</h3>
+        <h3 class="card-title"><strong>Departman-Personel Tablosu</strong></h3>
         <!-- Sayfalama Butonları Buraya Gelecek -->
         <div style="display: flex; gap: 10px; margin-left: auto;">
             <button id="prevPage" class="btn btn-primary" @(currentPage == 1 ? "disabled" : "")>« Geri</button>
@@ -33,7 +33,7 @@
             <thead>
                 <tr>
                     <th style="width: 55px">#</th>
-                    <th>Departman</th>
+                    <th style="width: 200px">Departman</th>
                     <th>Durum</th>
                     <th style="width: 110px">Sayı</th>
                 </tr>
@@ -46,13 +46,13 @@
                 @foreach (var x in currentPageData)
                 {
                     double oran = toplamPersonelSayisi > 0 ? ((double)x.Sayi / toplamPersonelSayisi) * 100 : 1;
-                    string oranStr = oran.ToString("0.#");
+                    string oranStr = oran.ToString("0.#", CultureInfo.InvariantCulture).Replace(",", ".");
 
                     string progressBarClass = oran <= 20 ? "progress-bar-danger" :
-                                               oran <= 40 ? "progress-bar-warning" :
-                                               oran <= 60 ? "progress-bar-info" :
-                                               oran <= 80 ? "progress-bar-primary" :
-                                               "progress-bar-success";
+                                                   oran <= 40 ? "progress-bar-warning" :
+                                                   oran <= 60 ? "progress-bar-info" :
+                                                   oran <= 80 ? "progress-bar-primary" :
+                                                   "progress-bar-success";
 
                     string badgeClass = oran <= 20 ? "badge bg-danger" :
                                         oran <= 40 ? "badge bg-warning" :
@@ -83,8 +83,8 @@
                         <tr class="empty-row">
                             <td>@startIndex</td> <!-- Burada boş satır için de sıralama numarasını ekliyoruz -->
                             <td>-</td> <!-- Boş satırda Departman kısmı - olacak -->
-                            <td>0%</td> <!-- Boş satırda Durum kısmı 0% olacak -->
-                            <td>0</td> <!-- Boş satırda Personel Sayısı kısmı 0 olacak -->
+                            <td><strong>0%</strong></td> <!-- Boş satırda Durum kısmı 0% olacak -->
+                            <td><span class="badge bg-black">0</span></td> <!-- Boş satırda Personel Sayısı kısmı 0 olacak -->
                         </tr>
                         startIndex++; // Boş satırların sırasını artırıyoruz
                     }
