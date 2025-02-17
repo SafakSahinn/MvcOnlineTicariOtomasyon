@@ -105,7 +105,7 @@ namespace MvcOnlineTicariOtomasyon.Controllers
 
         public PartialViewResult Partial3()
         {
-            var sorgu = c.Carilers.ToList();
+            var sorgu = c.Uruns.ToList();
             return PartialView(sorgu);
         }
     }
