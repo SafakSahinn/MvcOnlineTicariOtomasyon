@@ -132,138 +132,9 @@
                     </div>
                     <!-- /.col -->
                     <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Müşteri Şehir Tablosu</h3>
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body p-0">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 10px">#</th>
-                                            <th>Şehir</th>
-                                            <th>Durum</th>
-                                            <th style="width: 110px">Cari Sayısı</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @{ int sirano = 0;
-                                            int toplamCariSayisi = Model.Sum(x => x.Sayi);
-                                        }
-
-                                        @foreach (var x in Model)
-                                        {
-                                            double oran = toplamCariSayisi > 0 ? ((double)x.Sayi / toplamCariSayisi) * 100 : 1; // Yüzdelik oran hesapla
-                                            string oranStr = oran.ToString("0.##"); // Ondalık sayıyı iki basamakla göster
-
-                                            // Renk sınıfını belirleme (oranın durumuna göre)
-                                            string progressBarClass = oran <= 20 ? "progress-bar-danger" :
-                                                                       oran <= 40 ? "progress-bar-warning" :
-                                                                       oran <= 60 ? "progress-bar-info" :
-                                                                       oran <= 80 ? "progress-bar-primary" :
-                                                                       "progress-bar-success";
-
-                                            string badgeClass = oran <= 20 ? "badge bg-danger" :
-                                                                oran <= 40 ? "badge bg-warning" :
-                                                                oran <= 60 ? "badge bg-info" :
-                                                                oran <= 80 ? "badge bg-primary" :
-                                                                "badge bg-success";
-
-                                            <tr>
-                                                <td>@{sirano++;} @sirano</td>
-                                                <td>@x.Sehir</td>
-                                                <td style="display: flex; align-items: center;">
-                                                    <span style="min-width: 40px; margin-right: 10px; font-weight: bold; text-align: left;">@oranStr%</span>
-                                                    <div class="progress progress-xs" style="flex: 1;">
-                                                        <!-- Progress bar rengi de oranlara göre değişiyor -->
-                                                        <div class="progress-bar @progressBarClass" style="width: @(oran)%"></div>
-                                                    </div>
-                                                </td>
-                                                <td><span class="@badgeClass">@x.Sayi</span></td>
-                                            </tr>
-                                        }
-
-                                        <!-- Toplam satırı -->
-                                        <tr>
-                                            <td colspan="2"><strong>Toplam</strong></td>
-                                            <td style="display: flex; align-items: center;">
-                                                <span style="min-width: 40px; margin-right: 10px; font-weight: bold; text-align: left;">100%</span>
-                                                <div class="progress progress-xs" style="flex: 1;">
-                                                    <!-- Toplam progress barı sabit yeşil yapalım -->
-                                                    <div class="progress-bar progress-bar-success" style="width: 100%"></div>
-                                                </div>
-                                            </td>
-                                            <td><span class="badge bg-success">@toplamCariSayisi</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.card-body -->
-                        </div>
+                        @Html.Action("Partial5", "Istatistik")
                         <!-- /.card -->
-
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Striped Full Width Table</h3>
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body p-0">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 10px">#</th>
-                                            <th>Task</th>
-                                            <th>Progress</th>
-                                            <th style="width: 40px">Label</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1.</td>
-                                            <td>Update software</td>
-                                            <td>
-                                                <div class="progress progress-xs">
-                                                    <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
-                                                </div>
-                                            </td>
-                                            <td><span class="badge bg-danger">55%</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>2.</td>
-                                            <td>Clean database</td>
-                                            <td>
-                                                <div class="progress progress-xs">
-                                                    <div class="progress-bar bg-warning" style="width: 70%"></div>
-                                                </div>
-                                            </td>
-                                            <td><span class="badge bg-warning">70%</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>3.</td>
-                                            <td>Cron job running</td>
-                                            <td>
-                                                <div class="progress progress-xs progress-striped active">
-                                                    <div class="progress-bar bg-primary" style="width: 30%"></div>
-                                                </div>
-                                            </td>
-                                            <td><span class="badge bg-primary">30%</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>4.</td>
-                                            <td>Fix and squish bugs</td>
-                                            <td>
-                                                <div class="progress progress-xs progress-striped active">
-                                                    <div class="progress-bar bg-success" style="width: 90%"></div>
-                                                </div>
-                                            </td>
-                                            <td><span class="badge bg-success">90%</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.card-body -->
-                        </div>
+                        @Html.Action("Partial4", "Istatistik")
                         <!-- /.card -->
                     </div>
                     <!-- /.col -->
@@ -278,13 +149,7 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-    <footer class="main-footer">
-        <div class="float-right d-none d-sm-block">
-            <b>Version</b> 3.0.4
-        </div>
-        <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong> All rights
-        reserved.
-    </footer>
+    
 
     <!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark">

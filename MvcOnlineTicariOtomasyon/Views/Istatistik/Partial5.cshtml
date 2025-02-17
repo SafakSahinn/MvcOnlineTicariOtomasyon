@@ -1,31 +1,30 @@
-﻿@model IEnumerable<MvcOnlineTicariOtomasyon.Models.Sınıflar.SinifGrup2>
+﻿@model IEnumerable<MvcOnlineTicariOtomasyon.Models.Sınıflar.SinifGrup>
 
 @{
     // Sayfa numarasını query string'den al
-    int currentPage = Request.QueryString["page"] != null ? int.Parse(Request.QueryString["page"]) : 1;
+    int currentPage2 = Request.QueryString["page2"] != null ? int.Parse(Request.QueryString["page2"]) : 1;
     int rowsPerPage = 5;
     int totalRows = Model.Count();
-    int totalPages = (int)Math.Ceiling((double)totalRows / rowsPerPage);
+    int totalPages2 = (int)Math.Ceiling((double)totalRows / rowsPerPage);
 
     // Sayfa verisini almak için Skip ve Take kullanıyoruz
-    var currentPageData = Model.Skip((currentPage - 1) * rowsPerPage).Take(rowsPerPage);
+    var currentPageData = Model.Skip((currentPage2 - 1) * rowsPerPage).Take(rowsPerPage);
 
     // Son sayfada eksik satırlar varsa, onları hesaplayalım
     int remainingRows = totalRows % rowsPerPage;
-    bool isLastPage = currentPage == totalPages;
+    bool isLastPage = currentPage2 == totalPages2;
 
     // Başlangıç sırasını hesapla, ilk sayfa için 1, diğerleri için doğru sayıyı belirle
-    int startIndex = (currentPage - 1) * rowsPerPage + 1; // Bu, sıralamanın her sayfada devam etmesini sağlar
+    int startIndex = (currentPage2 - 1) * rowsPerPage + 1; // Bu, sıralamanın her sayfada devam etmesini sağlar
 }
 
 <div class="card">
     <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-        <h3 class="card-title">Departman Personel Tablosu</h3>
-        <!-- Sayfalama Butonları Buraya Gelecek -->
+        <h3 class="card-title">Müşteri Şehir Tablosu</h3>
         <div style="display: flex; gap: 10px; margin-left: auto;">
-            <button id="prevPage" class="btn btn-primary" @(currentPage == 1 ? "disabled" : "")>« Geri</button>
-            <span style="font-weight: bold;" id="pageInfo">Sayfa @currentPage / @totalPages</span>
-            <button id="nextPage" class="btn btn-primary" @(currentPage == totalPages ? "disabled" : "")>İleri »</button>
+            <button id="prevPage2" class="btn btn-primary" @(currentPage2 == 1 ? "disabled" : "")>« Geri</button>
+            <span style="font-weight: bold;" id="pageInfo2">Sayfa @currentPage2 / @totalPages2</span>
+            <button id="nextPage2" class="btn btn-primary" @(currentPage2 == totalPages2 ? "disabled" : "")>İleri »</button>
         </div>
     </div>
     <div class="card-body p-0">
@@ -33,21 +32,22 @@
             <thead>
                 <tr>
                     <th style="width: 55px">#</th>
-                    <th>Departman</th>
+                    <th style="width: 150px">Şehir</th>
                     <th>Durum</th>
                     <th style="width: 110px">Sayı</th>
                 </tr>
             </thead>
-            <tbody id="departmanTable">
+            <tbody>
                 @{
-                    int toplamPersonelSayisi = Model.Sum(x => x.Sayi);
+                    int toplamCariSayisi = Model.Sum(x => x.Sayi);
                 }
 
                 @foreach (var x in currentPageData)
                 {
-                    double oran = toplamPersonelSayisi > 0 ? ((double)x.Sayi / toplamPersonelSayisi) * 100 : 1;
-                    string oranStr = oran.ToString("0.#");
+                    double oran = toplamCariSayisi > 0 ? ((double)x.Sayi / toplamCariSayisi) * 100 : 1; // Yüzdelik oran hesapla
+                    string oranStr = oran.ToString("0.#"); // Ondalık sayıyı bir basamakla göster
 
+                    // Renk sınıfını belirleme (oranın durumuna göre)
                     string progressBarClass = oran <= 20 ? "progress-bar-danger" :
                                                oran <= 40 ? "progress-bar-warning" :
                                                oran <= 60 ? "progress-bar-info" :
@@ -60,9 +60,9 @@
                                         oran <= 80 ? "badge bg-primary" :
                                         "badge bg-success";
 
-                    <tr class="departman-row">
+                    <tr>
                         <td>@startIndex</td> <!-- Burada startIndex kullanılıyor, sayfa sayfa devam eden sıralama -->
-                        <td>@x.Departman</td>
+                        <td>@x.Sehir</td>
                         <td style="display: flex; align-items: center;">
                             <span style="min-width: 40px; margin-right: 10px; font-weight: bold; text-align: left;">@oranStr%</span>
                             <div class="progress progress-xs" style="flex: 1;">
@@ -82,9 +82,9 @@
                     {
                         <tr class="empty-row">
                             <td>@startIndex</td> <!-- Burada boş satır için de sıralama numarasını ekliyoruz -->
-                            <td>-</td> <!-- Boş satırda Departman kısmı - olacak -->
-                            <td>0%</td> <!-- Boş satırda Durum kısmı 0% olacak -->
-                            <td>0</td> <!-- Boş satırda Personel Sayısı kısmı 0 olacak -->
+                            <td>-</td> <!-- Boş satırda Şehir kısmı - olacak -->
+                            <td><strong>0%</strong></td>
+                            <td>0</td> <!-- Boş satırda Cari Sayısı kısmı 0 olacak -->
                         </tr>
                         startIndex++; // Boş satırların sırasını artırıyoruz
                     }
@@ -101,7 +101,7 @@
                             <div class="progress-bar progress-bar-success" style="width: 100%"></div>
                         </div>
                     </td>
-                    <td><span class="badge bg-success">@toplamPersonelSayisi</span></td>
+                    <td><span class="badge bg-success">@toplamCariSayisi</span></td>
                 </tr>
             </tfoot>
         </table>
@@ -111,20 +111,20 @@
 <!-- Sayfalama JavaScript -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const prevButton = document.getElementById("prevPage");
-        const nextButton = document.getElementById("nextPage");
+        const prevButton2 = document.getElementById("prevPage2");
+        const nextButton2 = document.getElementById("nextPage2");
 
-        prevButton.addEventListener("click", function () {
-            let currentPage = @currentPage;
-            if (currentPage > 1) {
-                window.location.href = "?page=" + (currentPage - 1);
+        prevButton2.addEventListener("click", function () {
+            let currentPage2 = @currentPage2;
+            if (currentPage2 > 1) {
+                window.location.href = "?page2=" + (currentPage2 - 1);
             }
         });
 
-        nextButton.addEventListener("click", function () {
-            let currentPage = @currentPage;
-            if (currentPage < @totalPages) {
-                window.location.href = "?page=" + (currentPage + 1);
+        nextButton2.addEventListener("click", function () {
+            let currentPage2 = @currentPage2;
+            if (currentPage2 < @totalPages2) {
+                window.location.href = "?page2=" + (currentPage2 + 1);
             }
         });
     });
