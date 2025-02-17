@@ -135,5 +135,18 @@ namespace MvcOnlineTicariOtomasyon.Controllers
                          .OrderByDescending(x => x.Sayi).ToList();
             return PartialView(sorgu.ToList());
         }
+
+        public PartialViewResult Partial6()
+        {
+            var sorgu = (from x in c.Uruns
+                         group x by x.Kategori.KategoriAd into g
+                         select new SinifGrup4
+                         {
+                             Kategori = g.Key,
+                             Sayi = g.Count()
+                         })
+                         .OrderByDescending(x => x.Sayi).ToList();
+            return PartialView(sorgu.ToList());
+        }
     }
 }

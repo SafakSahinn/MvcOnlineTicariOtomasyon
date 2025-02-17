@@ -1,31 +1,30 @@
-﻿@model IEnumerable<MvcOnlineTicariOtomasyon.Models.Sınıflar.SinifGrup2>
+﻿@model IEnumerable<MvcOnlineTicariOtomasyon.Models.Sınıflar.SinifGrup4>
 @using System.Globalization
 @{
     // Sayfa numarasını query string'den al
-    int currentPage = Request.QueryString["page"] != null ? int.Parse(Request.QueryString["page"]) : 1;
+    int currentPage4 = Request.QueryString["page4"] != null ? int.Parse(Request.QueryString["page4"]) : 1;
     int rowsPerPage = 5;
     int totalRows = Model.Count();
-    int totalPages = (int)Math.Ceiling((double)totalRows / rowsPerPage);
+    int totalPages4 = (int)Math.Ceiling((double)totalRows / rowsPerPage);
 
     // Sayfa verisini almak için Skip ve Take kullanıyoruz
-    var currentPageData = Model.Skip((currentPage - 1) * rowsPerPage).Take(rowsPerPage);
+    var currentPageData = Model.Skip((currentPage4 - 1) * rowsPerPage).Take(rowsPerPage);
 
     // Son sayfada eksik satırlar varsa, onları hesaplayalım
     int remainingRows = totalRows % rowsPerPage;
-    bool isLastPage = currentPage == totalPages;
+    bool isLastPage = currentPage4 == totalPages4;
 
     // Başlangıç sırasını hesapla, ilk sayfa için 1, diğerleri için doğru sayıyı belirle
-    int startIndex = (currentPage - 1) * rowsPerPage + 1; // Bu, sıralamanın her sayfada devam etmesini sağlar
+    int startIndex = (currentPage4 - 1) * rowsPerPage + 1; // Bu, sıralamanın her sayfada devam etmesini sağlar
 }
 
 <div class="card">
     <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-        <h3 class="card-title"><strong>Departman-Personel Tablosu</strong></h3>
-        <!-- Sayfalama Butonları Buraya Gelecek -->
+        <h3 class="card-title"><strong>Kategori-Ürün İstatistikleri</strong></h3>
         <div style="display: flex; gap: 10px; margin-left: auto;">
-            <button id="prevPage" class="btn btn-primary" @(currentPage == 1 ? "disabled" : "")>« Geri</button>
-            <span style="font-weight: bold;" id="pageInfo">Sayfa @currentPage / @totalPages</span>
-            <button id="nextPage" class="btn btn-primary" @(currentPage == totalPages ? "disabled" : "")>İleri »</button>
+            <button id="prevPage4" class="btn btn-primary" @(currentPage4 == 1 ? "disabled" : "")>« Geri</button>
+            <span style="font-weight: bold;" id="pageInfo4">Sayfa @currentPage4 / @totalPages4</span>
+            <button id="nextPage4" class="btn btn-primary" @(currentPage4 == totalPages4 ? "disabled" : "")>İleri »</button>
         </div>
     </div>
     <div class="card-body p-0">
@@ -33,21 +32,22 @@
             <thead>
                 <tr>
                     <th style="width: 55px">#</th>
-                    <th style="width: 200px">Departman</th>
+                    <th style="width: 200px">Kategori</th>
                     <th>Durum</th>
                     <th style="width: 110px">Sayı</th>
                 </tr>
             </thead>
-            <tbody id="departmanTable">
+            <tbody>
                 @{
-                    int toplamPersonelSayisi = Model.Sum(x => x.Sayi);
+                    int toplamUrunSayisi = Model.Sum(x => x.Sayi);
                 }
 
                 @foreach (var x in currentPageData)
                 {
-                    double oran = toplamPersonelSayisi > 0 ? ((double)x.Sayi / toplamPersonelSayisi) * 100 : 1;
-                    string oranStr = oran.ToString("0.#", CultureInfo.InvariantCulture).Replace(",", ".");
+                    double oran = toplamUrunSayisi > 0 ? ((double)x.Sayi / toplamUrunSayisi) * 100 : 1; // Yüzdelik oran hesapla
+                    string oranStr = oran.ToString("0.#", CultureInfo.InvariantCulture).Replace(",", "."); // Ondalık sayıyı bir basamakla göster
 
+                    // Renk sınıfını belirleme (oranın durumuna göre)
                     string progressBarClass = oran <= 20 ? "progress-bar-danger" :
                                                    oran <= 40 ? "progress-bar-warning" :
                                                    oran <= 60 ? "progress-bar-info" :
@@ -60,9 +60,9 @@
                                         oran <= 80 ? "badge bg-primary" :
                                         "badge bg-success";
 
-                    <tr class="departman-row">
+                    <tr>
                         <td>@startIndex</td> <!-- Burada startIndex kullanılıyor, sayfa sayfa devam eden sıralama -->
-                        <td>@x.Departman</td>
+                        <td>@x.Kategori</td>
                         <td style="display: flex; align-items: center;">
                             <span style="min-width: 40px; margin-right: 10px; font-weight: bold; text-align: left;">@oranStr%</span>
                             <div class="progress progress-xs" style="flex: 1;">
@@ -82,9 +82,9 @@
                     {
                         <tr class="empty-row">
                             <td>@startIndex</td> <!-- Burada boş satır için de sıralama numarasını ekliyoruz -->
-                            <td>-</td> <!-- Boş satırda Departman kısmı - olacak -->
+                            <td>-</td> <!-- Boş satırda Şehir kısmı - olacak -->
                             <td><strong>0%</strong></td> <!-- Boş satırda Durum kısmı 0% olacak -->
-                            <td><span class="badge bg-black">0</span></td> <!-- Boş satırda Personel Sayısı kısmı 0 olacak -->
+                            <td><span class="badge bg-black">0</span></td> <!-- Boş satırda Cari Sayısı kısmı 0 olacak -->
                         </tr>
                         startIndex++; // Boş satırların sırasını artırıyoruz
                     }
@@ -101,7 +101,7 @@
                             <div class="progress-bar progress-bar-success" style="width: 100%"></div>
                         </div>
                     </td>
-                    <td><span class="badge bg-success">@toplamPersonelSayisi</span></td>
+                    <td><span class="badge bg-success">@toplamUrunSayisi</span></td>
                 </tr>
             </tfoot>
         </table>
@@ -111,21 +111,22 @@
 <!-- Sayfalama JavaScript -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const prevButton = document.getElementById("prevPage");
-        const nextButton = document.getElementById("nextPage");
+    const prevButton4 = document.getElementById("prevPage4");
+    const nextButton4 = document.getElementById("nextPage4");
 
-        prevButton.addEventListener("click", function () {
-            let currentPage = @currentPage;
-            if (currentPage > 1) {
-                window.location.href = "?page=" + (currentPage - 1);
-            }
-        });
-
-        nextButton.addEventListener("click", function () {
-            let currentPage = @currentPage;
-            if (currentPage < @totalPages) {
-                window.location.href = "?page=" + (currentPage + 1);
-            }
-        });
+    prevButton4.addEventListener("click", function () {
+        let currentPage4 = @currentPage4;
+        if (currentPage4 > 1) {
+            window.location.href = "?page4=" + (currentPage4 - 1);
+        }
     });
+
+    nextButton4.addEventListener("click", function () {
+        let currentPage4 = @currentPage4;
+        if (currentPage4 < @totalPages4) {
+            window.location.href = "?page4=" + (currentPage4 + 1);
+        }
+    });
+});
+
 </script>
