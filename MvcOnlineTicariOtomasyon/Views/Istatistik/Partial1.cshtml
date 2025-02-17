@@ -1,10 +1,15 @@
 ﻿@model IEnumerable<MvcOnlineTicariOtomasyon.Models.Sınıflar.SinifGrup2>
 
 <div class="card">
-    <div class="card-header">
+    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
         <h3 class="card-title">Departman Personel Tablosu</h3>
+        <!-- Sayfalama Butonları Buraya Gelecek -->
+        <div style="display: flex; gap: 10px;">
+            <button id="prevPage" class="btn btn-primary" disabled>« Geri</button>
+            <span style="font-weight: bold;" id="pageInfo"></span>
+            <button id="nextPage" class="btn btn-primary">İleri »</button>
+        </div>
     </div>
-    <!-- /.card-header -->
     <div class="card-body p-0">
         <table class="table">
             <thead>
@@ -15,7 +20,7 @@
                     <th style="width: 110px">Personel Sayısı</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="departmanTable">
                 @{
                     int sirano = 0;
                     int toplamPersonelSayisi = Model.Sum(x => x.Sayi);
@@ -23,10 +28,9 @@
 
                 @foreach (var x in Model)
                 {
-                    double oran = toplamPersonelSayisi > 0 ? ((double)x.Sayi / toplamPersonelSayisi) * 100 : 1; // Yüzdelik oran hesapla
-                    string oranStr = oran.ToString("0.##"); // Ondalık sayıyı iki basamakla göster
+                    double oran = toplamPersonelSayisi > 0 ? ((double)x.Sayi / toplamPersonelSayisi) * 100 : 1;
+                    string oranStr = oran.ToString("0.##");
 
-                    // Renk sınıfını belirleme (oranın durumuna göre)
                     string progressBarClass = oran <= 20 ? "progress-bar-danger" :
                                                oran <= 40 ? "progress-bar-warning" :
                                                oran <= 60 ? "progress-bar-info" :
@@ -39,34 +43,72 @@
                                         oran <= 80 ? "badge bg-primary" :
                                         "badge bg-success";
 
-                    <tr>
+                    <tr class="departman-row">
                         <td>@{sirano++;} @sirano</td>
                         <td>@x.Departman</td>
                         <td style="display: flex; align-items: center;">
                             <span style="min-width: 40px; margin-right: 10px; font-weight: bold; text-align: left;">@oranStr%</span>
                             <div class="progress progress-xs" style="flex: 1;">
-                                <!-- Progress bar rengi de oranlara göre değişiyor -->
                                 <div class="progress-bar @progressBarClass" style="width: @(oran)%"></div>
                             </div>
                         </td>
                         <td><span class="@badgeClass">@x.Sayi</span></td>
                     </tr>
                 }
+            </tbody>
 
-                <!-- Toplam satırı -->
+            <!-- Toplam Satırı (Sabit Kalacak) -->
+            <tfoot>
                 <tr>
                     <td colspan="2"><strong>Toplam</strong></td>
                     <td style="display: flex; align-items: center;">
                         <span style="min-width: 40px; margin-right: 10px; font-weight: bold; text-align: left;">100%</span>
                         <div class="progress progress-xs" style="flex: 1;">
-                            <!-- Toplam progress barı sabit yeşil yapalım -->
                             <div class="progress-bar progress-bar-success" style="width: 100%"></div>
                         </div>
                     </td>
                     <td><span class="badge bg-success">@toplamPersonelSayisi</span></td>
                 </tr>
-            </tbody>
+            </tfoot>
         </table>
     </div>
-    <!-- /.card-body -->
 </div>
+
+<!-- Sayfalama JavaScript -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const rows = Array.from(document.querySelectorAll(".departman-row"));
+        const rowsPerPage = 5;
+        let currentPage = 1;
+        const totalPages = Math.ceil(rows.length / rowsPerPage);
+
+        function showPage(page) {
+            let start = (page - 1) * rowsPerPage;
+            let end = start + rowsPerPage;
+
+            rows.forEach((row, index) => {
+                row.style.display = (index >= start && index < end) ? "table-row" : "none";
+            });
+
+            document.getElementById("prevPage").disabled = page === 1;
+            document.getElementById("nextPage").disabled = page === totalPages;
+            document.getElementById("pageInfo").innerText = `Sayfa ${page} / ${totalPages}`;
+        }
+
+        document.getElementById("prevPage").addEventListener("click", function () {
+            if (currentPage > 1) {
+                currentPage--;
+                showPage(currentPage);
+            }
+        });
+
+        document.getElementById("nextPage").addEventListener("click", function () {
+            if (currentPage < totalPages) {
+                currentPage++;
+                showPage(currentPage);
+            }
+        });
+
+        showPage(currentPage);
+    });
+</script>
