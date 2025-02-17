@@ -1,0 +1,72 @@
+﻿@model IEnumerable<MvcOnlineTicariOtomasyon.Models.Sınıflar.SinifGrup2>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Departman Personel Tablosu</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body p-0">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 10px">#</th>
+                    <th>Departman</th>
+                    <th>Durum</th>
+                    <th style="width: 110px">Personel Sayısı</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int sirano = 0;
+                    int toplamPersonelSayisi = Model.Sum(x => x.Sayi);
+                }
+
+                @foreach (var x in Model)
+                {
+                    double oran = toplamPersonelSayisi > 0 ? ((double)x.Sayi / toplamPersonelSayisi) * 100 : 1; // Yüzdelik oran hesapla
+                    string oranStr = oran.ToString("0.##"); // Ondalık sayıyı iki basamakla göster
+
+                    // Renk sınıfını belirleme (oranın durumuna göre)
+                    string progressBarClass = oran <= 20 ? "progress-bar-danger" :
+                                               oran <= 40 ? "progress-bar-warning" :
+                                               oran <= 60 ? "progress-bar-info" :
+                                               oran <= 80 ? "progress-bar-primary" :
+                                               "progress-bar-success";
+
+                    string badgeClass = oran <= 20 ? "badge bg-danger" :
+                                        oran <= 40 ? "badge bg-warning" :
+                                        oran <= 60 ? "badge bg-info" :
+                                        oran <= 80 ? "badge bg-primary" :
+                                        "badge bg-success";
+
+                    <tr>
+                        <td>@{sirano++;} @sirano</td>
+                        <td>@x.Departman</td>
+                        <td style="display: flex; align-items: center;">
+                            <span style="min-width: 40px; margin-right: 10px; font-weight: bold; text-align: left;">@oranStr%</span>
+                            <div class="progress progress-xs" style="flex: 1;">
+                                <!-- Progress bar rengi de oranlara göre değişiyor -->
+                                <div class="progress-bar @progressBarClass" style="width: @(oran)%"></div>
+                            </div>
+                        </td>
+                        <td><span class="@badgeClass">@x.Sayi</span></td>
+                    </tr>
+                }
+
+                <!-- Toplam satırı -->
+                <tr>
+                    <td colspan="2"><strong>Toplam</strong></td>
+                    <td style="display: flex; align-items: center;">
+                        <span style="min-width: 40px; margin-right: 10px; font-weight: bold; text-align: left;">100%</span>
+                        <div class="progress progress-xs" style="flex: 1;">
+                            <!-- Toplam progress barı sabit yeşil yapalım -->
+                            <div class="progress-bar progress-bar-success" style="width: 100%"></div>
+                        </div>
+                    </td>
+                    <td><span class="badge bg-success">@toplamPersonelSayisi</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>
