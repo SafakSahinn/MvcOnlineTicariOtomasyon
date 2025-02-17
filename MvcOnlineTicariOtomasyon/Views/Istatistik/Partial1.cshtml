@@ -1,20 +1,38 @@
 ﻿@model IEnumerable<MvcOnlineTicariOtomasyon.Models.Sınıflar.SinifGrup2>
 
+@{
+    // Sayfa numarasını query string'den al
+    int currentPage = Request.QueryString["page"] != null ? int.Parse(Request.QueryString["page"]) : 1;
+    int rowsPerPage = 5;
+    int totalRows = Model.Count();
+    int totalPages = (int)Math.Ceiling((double)totalRows / rowsPerPage);
+
+    // Sayfa verisini almak için Skip ve Take kullanıyoruz
+    var currentPageData = Model.Skip((currentPage - 1) * rowsPerPage).Take(rowsPerPage);
+
+    // Son sayfada eksik satırlar varsa, onları hesaplayalım
+    int remainingRows = totalRows % rowsPerPage;
+    bool isLastPage = currentPage == totalPages;
+
+    // Başlangıç sırasını hesapla, ilk sayfa için 1, diğerleri için doğru sayıyı belirle
+    int startIndex = (currentPage - 1) * rowsPerPage + 1; // Bu, sıralamanın her sayfada devam etmesini sağlar
+}
+
 <div class="card">
     <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
         <h3 class="card-title">Departman Personel Tablosu</h3>
         <!-- Sayfalama Butonları Buraya Gelecek -->
         <div style="display: flex; gap: 10px; margin-left: auto;">
-            <button id="prevPage" class="btn btn-primary" disabled>« Geri</button>
-            <span style="font-weight: bold;" id="pageInfo"></span>
-            <button id="nextPage" class="btn btn-primary">İleri »</button>
+            <button id="prevPage" class="btn btn-primary" @(currentPage == 1 ? "disabled" : "")>« Geri</button>
+            <span style="font-weight: bold;" id="pageInfo">Sayfa @currentPage / @totalPages</span>
+            <button id="nextPage" class="btn btn-primary" @(currentPage == totalPages ? "disabled" : "")>İleri »</button>
         </div>
     </div>
     <div class="card-body p-0">
         <table class="table">
             <thead>
                 <tr>
-                    <th style="width: 10px">#</th>
+                    <th style="width: 55px">#</th>
                     <th>Departman</th>
                     <th>Durum</th>
                     <th style="width: 110px">Personel Sayısı</th>
@@ -22,11 +40,10 @@
             </thead>
             <tbody id="departmanTable">
                 @{
-                    int sirano = 0;
                     int toplamPersonelSayisi = Model.Sum(x => x.Sayi);
                 }
 
-                @foreach (var x in Model)
+                @foreach (var x in currentPageData)
                 {
                     double oran = toplamPersonelSayisi > 0 ? ((double)x.Sayi / toplamPersonelSayisi) * 100 : 1;
                     string oranStr = oran.ToString("0.##");
@@ -44,7 +61,7 @@
                                         "badge bg-success";
 
                     <tr class="departman-row">
-                        <td>@{sirano++;} @sirano</td>
+                        <td>@startIndex</td> <!-- Burada startIndex kullanılıyor, sayfa sayfa devam eden sıralama -->
                         <td>@x.Departman</td>
                         <td style="display: flex; align-items: center;">
                             <span style="min-width: 40px; margin-right: 10px; font-weight: bold; text-align: left;">@oranStr%</span>
@@ -54,6 +71,23 @@
                         </td>
                         <td><span class="@badgeClass">@x.Sayi</span></td>
                     </tr>
+
+                    startIndex++; // Sıra numarasını her satırda artırıyoruz
+                }
+
+                @if (isLastPage && remainingRows > 0)
+                {
+                    // Son sayfada eksik satır varsa boş satır ekle
+                    for (int i = 0; i < (rowsPerPage - remainingRows); i++)
+                    {
+                        <tr class="empty-row">
+                            <td>@startIndex</td> <!-- Burada boş satır için de sıralama numarasını ekliyoruz -->
+                            <td>-</td> <!-- Boş satırda Departman kısmı - olacak -->
+                            <td>0%</td> <!-- Boş satırda Durum kısmı 0% olacak -->
+                            <td>0</td> <!-- Boş satırda Personel Sayısı kısmı 0 olacak -->
+                        </tr>
+                        startIndex++; // Boş satırların sırasını artırıyoruz
+                    }
                 }
             </tbody>
 
@@ -77,38 +111,21 @@
 <!-- Sayfalama JavaScript -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const rows = Array.from(document.querySelectorAll(".departman-row"));
-        const rowsPerPage = 5;
-        let currentPage = 1;
-        const totalPages = Math.ceil(rows.length / rowsPerPage);
+        const prevButton = document.getElementById("prevPage");
+        const nextButton = document.getElementById("nextPage");
 
-        function showPage(page) {
-            let start = (page - 1) * rowsPerPage;
-            let end = start + rowsPerPage;
-
-            rows.forEach((row, index) => {
-                row.style.display = (index >= start && index < end) ? "table-row" : "none";
-            });
-
-            document.getElementById("prevPage").disabled = page === 1;
-            document.getElementById("nextPage").disabled = page === totalPages;
-            document.getElementById("pageInfo").innerText = `Sayfa ${page} / ${totalPages}`;
-        }
-
-        document.getElementById("prevPage").addEventListener("click", function () {
+        prevButton.addEventListener("click", function () {
+            let currentPage = @currentPage;
             if (currentPage > 1) {
-                currentPage--;
-                showPage(currentPage);
+                window.location.href = "?page=" + (currentPage - 1);
             }
         });
 
-        document.getElementById("nextPage").addEventListener("click", function () {
-            if (currentPage < totalPages) {
-                currentPage++;
-                showPage(currentPage);
+        nextButton.addEventListener("click", function () {
+            let currentPage = @currentPage;
+            if (currentPage < @totalPages) {
+                window.location.href = "?page=" + (currentPage + 1);
             }
         });
-
-        showPage(currentPage);
     });
 </script>
