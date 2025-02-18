@@ -32,6 +32,11 @@ namespace MvcOnlineTicariOtomasyon.Models.Sınıflar
         [Required(ErrorMessage = "Bu alanı boş geçemezsiniz.")]
         public string CariMail { get; set; }
 
+        [Column(TypeName = "Varchar")]
+        [StringLength(20, ErrorMessage = "Cari şifre bilgisi en fazla 20 karakter uzunluğunda olmalıdır.")]
+        [Required(ErrorMessage = "Bu alanı boş geçemezsiniz.")]
+        public string CariSifre { get; set; }
+
         public bool Durum { get; set; }
 
         //ilişkiler
