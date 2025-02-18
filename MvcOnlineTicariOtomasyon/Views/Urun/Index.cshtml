@@ -5,6 +5,16 @@
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
 <br />
+@using (Html.BeginForm("Index", "Urun", FormMethod.Get, new { @class = "search-form" }))
+{
+    <div class="form-group">
+        <label for="p">Ürün Ara</label>
+        @Html.TextBox("p", null, new { @class = "form-control", placeholder = "Ürüne ait bilgi girin..." })
+    </div>
+    <button type="submit" class="btn btn-primary">Ara</button>
+}
+
+<br />
 <table class="table table-striped">
     <tr>
         <th>ID</th>
@@ -26,10 +36,12 @@
             <td>@u.UrunAd</td>
             <td>@u.Marka</td>
             <td>@u.Stok</td>
-            <td>@u.AlisFiyat</td>
-            <td>@u.SatisFiyat</td>
+            <td>@u.AlisFiyat ₺</td>
+            <td>@u.SatisFiyat ₺</td>
             <td>@u.Kategori.KategoriAd</td>
-            <td><img src="@u.UrunGorsel" alt="Ürün Görseli" width="100"></td>
+            <td>
+                <img src="@u.UrunGorsel" alt="Ürün Görseli" style="width: 100px; height: 100px; border-radius: 5px;">
+            </td>
             <td>
                 <a href="/Urun/UrunSil/@u.UrunID" class="btn btn-danger">Sil</a>
             </td>
