@@ -17,7 +17,6 @@
         <th>Toplam</th>
         <th>Güncelle</th>
         <th>Detaylar</th>
-        <th>Liste</th>
         <th>Yeni Kalem</th>
     </tr>
 
@@ -34,11 +33,40 @@
             <td>@k.Toplam ₺</td>
             <td><a href="/Fatura/FaturaGetir/@k.FaturaId" class="btn btn-success">Güncelle</a></td>
             <td><a href="/Fatura/FaturaDetay/@k.FaturaId" class="btn btn-info">Detaylar</a></td>
-            <td><a href="/Fatura/FaturaDetay/@k.FaturaId" class="btn btn-warning">Liste</a></td>
             <td><a href="/Fatura/FaturaDetay/@k.FaturaId" class="btn btn-danger">Yeni Kalem</a></td>
         </tr>
     }
 </table>
-
 <a href="/Fatura/FaturaEkle" class="btn btn-primary">Yeni Fatura Girişi</a>
+<br />
+<br />
+<button type="button" class="btn btn-dark" data-toggle="modal" data-target="#Modal1">Popup</button>
+
+<div class="modal" id="Modal1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Hızlı Faturalar</h2>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <tr>
+                        <td>Seri No</td>
+                        <td>Sıra No</td>
+                        <td>Tutar No</td>
+                    </tr>
+                    @foreach (var x in Model)
+                    {
+                        <tr>
+                            <td>@x.FarutaSeriNo</td>
+                            <td>@x.FaturaSıraNo</td>
+                            <td>@x.Toplam</td>
+                        </tr>
+                    }
+                </table>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
 
