@@ -55,17 +55,43 @@ namespace MvcOnlineTicariOtomasyon.Controllers
             return View(mesajlar);
         }
 
+        public ActionResult MesajDetay(int id)
+        {
+            var degerler = c.Mesajlars.Where(x => x.MesajID == id).ToList();
 
-        //    [HttpGet]
-        //    public ActionResult YeniMesaj()
-        //    {
-        //        return View();
-        //    }
-        //    [HttpPost]
-        //    public ActionResult YeniMesaj()
-        //    {
-        //        return View();
-        //    }
-        //
+            var mail = (string)Session["CariMail"];
+            var gelensayisi = c.Mesajlars.Count(x => x.Alici == mail).ToString();
+            ViewBag.d1 = gelensayisi;
+
+            var gidensayisi = c.Mesajlars.Count(x => x.Gonderici == mail).ToString();
+            ViewBag.d2 = gidensayisi;
+
+            return View(degerler);
+        }
+
+        [HttpGet]
+        public ActionResult YeniMesaj()
+        {
+            var mail = (string)Session["CariMail"];
+
+            var gelensayisi = c.Mesajlars.Count(x => x.Alici == mail).ToString();
+            ViewBag.d1 = gelensayisi;
+
+            var gidensayisi = c.Mesajlars.Count(x => x.Gonderici == mail).ToString();
+            ViewBag.d2 = gidensayisi;
+
+            return View();
+        }
+        [HttpPost]
+        public ActionResult YeniMesaj(Mesajlar m)
+        {
+            var mail = (string)Session["CariMail"];
+            m.Tarih = DateTime.Parse(DateTime.Now.ToShortDateString());
+            m.Gonderici = mail;
+            c.Mesajlars.Add(m);
+            c.SaveChanges();
+            return View();
+        }
+
     }
 }
