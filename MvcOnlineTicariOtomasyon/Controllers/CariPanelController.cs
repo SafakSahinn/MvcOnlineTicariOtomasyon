@@ -32,7 +32,7 @@ namespace MvcOnlineTicariOtomasyon.Controllers
         public ActionResult GelenMesajlar()
         {
             var mail = (string)Session["CariMail"];
-            var mesajlar = c.Mesajlars.Where(x => x.Alici == mail).ToList();
+            var mesajlar = c.Mesajlars.Where(x => x.Alici == mail).OrderByDescending(y => y.Tarih).ToList();
             var gelensayisi = c.Mesajlars.Count(x => x.Alici == mail).ToString();
             ViewBag.d1 = gelensayisi;
 
@@ -45,7 +45,7 @@ namespace MvcOnlineTicariOtomasyon.Controllers
         public ActionResult GidenMesajlar()
         {
             var mail = (string)Session["CariMail"];
-            var mesajlar = c.Mesajlars.Where(x => x.Gonderici == mail).ToList();
+            var mesajlar = c.Mesajlars.Where(x => x.Gonderici == mail).OrderByDescending(y => y.Tarih).ToList();
 
             var gelensayisi = c.Mesajlars.Count(x => x.Alici == mail).ToString();
             ViewBag.d1 = gelensayisi;
