@@ -167,6 +167,7 @@
     <Compile Include="Models\Sınıflar\Cariler.cs" />
     <Compile Include="Models\Sınıflar\Class1.cs" />
     <Compile Include="Models\Sınıflar\Class3.cs" />
+    <Compile Include="Models\Sınıflar\Class4.cs" />
     <Compile Include="Models\Sınıflar\Context.cs" />
     <Compile Include="Models\Sınıflar\Departman.cs" />
     <Compile Include="Models\Sınıflar\Detay.cs" />
@@ -188,6 +189,7 @@
     <Compile Include="Models\Sınıflar\Urun.cs" />
     <Compile Include="Models\Sınıflar\Yapilacak.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Roller\AdminRoleProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AdminLTE-3.0.4\build\config\postcss.config.js" />
@@ -2973,6 +2975,7 @@
     <Content Include="Views\CariPanel\Partial2.cshtml" />
     <Content Include="Views\Error\PageError.cshtml" />
     <Content Include="Views\Kategori\Deneme.cshtml" />
+    <Content Include="Views\Fatura\Dinamik.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

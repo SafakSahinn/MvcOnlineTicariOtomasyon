@@ -19,6 +19,7 @@ namespace MvcOnlineTicariOtomasyon.Controllers
             return View(degeler);
         }
 
+        [Authorize(Roles ="A")]
         [HttpGet]
         public ActionResult DepartmanEkle()
         {
